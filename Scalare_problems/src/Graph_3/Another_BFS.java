@@ -1,6 +1,7 @@
 package Graph_3;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -105,71 +106,60 @@ Total length of path = 1 + 1 + 2 = 4.
 Explanation 2:
 
  Path will be 0-> 1.*/
-class NodeData{
-	int v ;
-	int weight;
-	
-	public NodeData(int v , int weight) {
-		this.v = v;
-		this.weight = weight;
-	}
-	NodeData() {}
-	int getV() { return v; }
-    int getWeight() { return weight; }
-	
-}
-public class Another_BFS {
-	static ArrayList<ArrayList<NodeData>> adj;
-	public static void main(String[] args) {
-		int A = 6;
-		int B[][] = {{2, 5, 1}, {1, 3, 1}, {0, 5, 2}, 
-					{0, 2, 2} , {1, 4, 1}, {0, 1, 1}};
-		int C = 3;
-		int D = 2;
-		adj = new ArrayList<>();
-		for(int i = 0; i<= A+B.length; i++) {
-			adj.add(new ArrayList<>());
-			
-			}
-		int v = A;
-		for(int i = 0; i<B.length; i++) {
-			if(B[i][2] == 2) {
-				adj.get(B[i][0]).add(new NodeData(v, 1));
-				adj.get(v).add(new NodeData(B[i][0], 1));
-				adj.get(v).add(new NodeData(B[i][1], 1));
-				adj.get(B[i][1]).add(new NodeData(v, 1));
-				v++;
-				}
-			else {
-				adj.get(B[i][0]).add(new NodeData(B[i][1], B[i][2])); 
-				adj.get(B[i][1]).add(new NodeData(B[i][0], B[i][2])); 
-					}
-				}
-				boolean visisted[] = new boolean[A+B.length];
-				int count  = 0;
-				int k =  findShortestPath(adj, visisted, C, D, count);
-				System.out.println(k);
-			    
-		}
-			    static int findShortestPath(ArrayList<ArrayList<NodeData>> adj, boolean[]visisted, int src, int target, int count) {
-			    	visisted[src] = true;
-			    	Queue<NodeData> q = new LinkedList();
-			    	///int count = 0;
-			    	q.add(new NodeData(src, 0));
-			    	while(!q.isEmpty()) {
-			    		NodeData n = q.poll();
-			    		if(target == n.v)
-			    		return n.weight;
-			    		for(NodeData i : adj.get(n.v)) {
-			    			
-			    			if(!visisted[i.v]) {
-			    				//count +=i.weight;
-			    				visisted[i.v]= true;
 
-			    				q.add(new NodeData(i.v, n.weight+1));
-			    			}
-			    		}
-			    	}
-			    	return -1;
-			    }
+public class Another_BFS {
+	static ArrayList<ArrayList<Integer>> adj;
+	public static void main(String[] args) {
+		int A = 2;
+		int B[][] = {{1,2}};
+		adj = new ArrayList<>();
+		for(int i = 0;i<=A; i++) {
+			adj.add(new ArrayList<>());
+		}
+		
+		for(int i = 0; i<B.length; i++) {
+			adj.get(B[i][0]).add(B[i][1]);
+			adj.get(B[i][1]).add(B[i][0]);
+		}
+		boolean[] visited = new boolean[A+1];
+		int color[]  = new int[A+1];
+		Arrays.fill(color, -1);
+		for(int i = 0; i<A; i++) {
+			if(!visited[i]) {
+				DFS(i,adj, visited, color, 0);
+			}
+		}
+		
+		int a = 0;
+		int b  = 0;
+		for(int i = 1; i<color.length; i++) {
+			if(color[i] == 0) {
+				a++;
+			}
+			else {
+				b++;
+			}
+		}
+		
+		double val = Math.pow(2, a)+ Math.pow(2, b);
+		System.out.println(val);
+		
+	}
+	static boolean  DFS(int u,ArrayList<ArrayList<Integer>> adj, boolean[] visisted, int[] color, int clr) {
+		visisted[u] = true;
+		color[u] = clr;
+		
+		for(int n : adj.get(u)) {
+			if(!visisted[n]) {
+				if(color[u] == color[n])
+					return false;
+			}
+			else {
+				if(!DFS(n, adj, visisted, color,1-color[u]))
+					return false;
+			}
+		}
+		return true;
+	}
+		
 }
