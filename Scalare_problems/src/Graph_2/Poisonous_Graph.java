@@ -115,7 +115,7 @@ public class Poisonous_Graph {
                // System.out.println(a);
                 //System.out.println(b);
                  if(result == false) {
-                	 System.out.println(0);
+                 System.out.println(0);
                  return ;
                  }
                  else{
